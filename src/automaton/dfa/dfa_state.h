@@ -1,8 +1,8 @@
 #ifndef DFA_STATE_H
 #define DFA_STATE_H
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class DFAState {
   public:

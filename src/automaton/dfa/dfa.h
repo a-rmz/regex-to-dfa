@@ -1,8 +1,9 @@
 #ifndef DFA_H
 #define DFA_H
 
-#include <vector>
 #include "dfa_state.h"
+
+#include <vector>
 
 class DFA {
   public:

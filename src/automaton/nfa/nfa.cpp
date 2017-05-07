@@ -1,16 +1,17 @@
 
 #include "nfa.h"
 #include "../utils.cpp"
+
 #include <algorithm>
 #include <numeric>
-#include <stack>
 #include <set>
+#include <stack>
 
 /**
   * Constructor
   */
 NFA::NFA() {
-  char alpha[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  char alpha[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	std::vector<char> alphabet(alpha, alpha + sizeof(alpha) - 1);
   this->set_alphabet(alphabet);
 }
@@ -85,6 +86,7 @@ void NFA::set_final_state(int final_state) {
   std::vector<int> final_states;
   final_states = {final_state};
   this->final_states = final_states;
+  this->states.insert(final_state);
 }
 
 /**

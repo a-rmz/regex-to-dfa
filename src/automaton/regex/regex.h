@@ -1,7 +1,8 @@
 
+#include "../nfa/nfa.h"
+
 #include <string>
 #include <vector>
-#include "../nfa.h"
 
 typedef std::vector<NFA*> nfa_vec;
 

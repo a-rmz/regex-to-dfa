@@ -1,5 +1,4 @@
 
-#include <vector>
 #include "regex.h"
 
 /**
@@ -22,24 +21,9 @@ void Regex::set_raw(std::string raw) {
   */
 Regex::~Regex() { };
 
-void print_nfa_vec(std::vector<NFA*> v) {
-  std::cout << "Operands:\n";
-  std::cout << "=========================\n";
-  for (auto elem : v) {
-    std::cout << *elem << std::endl;
-  }
-  std::cout << "=========================\n\n";
-}
-
-void print_char_vec(std::vector<char> v) {
-  std::cout << "Operators:\n";
-  std::cout << "=========================\n";
-  for (char elem : v) {
-    std::cout << elem << std::endl;
-  }
-  std::cout << "=========================\n\n";
-}
-
+/**
+  * Compile the raw regex into a NFA
+  */
 NFA* Regex::compile_regex() {
   std::vector<NFA*> operands;
   std::vector<char> operators;
@@ -111,26 +95,16 @@ NFA* Regex::compile_regex() {
         fs = {1};
         new_nfa->set_final_states(fs);
         operands.push_back(new_nfa);
-        // std::cout << "Push: " << '\n';
-        // std::cout<<"\n***************\n";
-        // std::cout << *operands.back();
-        // std::cout<<"\n***************\n";
       }
       break;
     }
   }
-  // std::cout << *operands.back() << std::endl;
 
   return operands.back();
 };
 
 NFA* Regex::concat(NFA* a, NFA* b) {
   NFA* result = new NFA();
-  /*std::cout<<"\n***************\n";
-  std::cout << *a;
-  std::cout<<"\n++++++++++++++++\n";
-  std::cout << *b;
-  std::cout<<"\n***************\n";*/
 
   int state_count = a->get_state_count() + b->get_state_count();
   result->set_states(state_count);
@@ -188,7 +162,6 @@ NFA* Regex::or_operator(nfa_vec opts, int no_of_selections) {
     state_count += option->get_state_count();
   }
 
-  // std::cout << "state_count: " << state_count << '\n';
   result->set_states(state_count);
 
   int adder_track = 1;

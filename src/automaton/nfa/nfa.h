@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "nfa_transition.hpp"
-#include "dfa.h"
+#include "../dfa/dfa.h"
 
 #define LAMBDA '^'
 

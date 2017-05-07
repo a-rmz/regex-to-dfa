@@ -1,7 +1,8 @@
 
 #include "dfa.h"
-#include "nfa.h"
+
 #include <algorithm>
+#include <iostream>
 
 std::map<int, DFAState*> DFA::get_transition_table() {
   return this->transition_table;
