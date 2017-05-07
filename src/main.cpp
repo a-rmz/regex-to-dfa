@@ -28,28 +28,28 @@ void nfa_lets() {
   std::vector<int> final_states;
   final_states = {2, 3};
 
-  std::vector<std::string> alphabet;
-  alphabet = {"a", "b", "c"};
+  std::vector<char> alphabet;
+  alphabet = {'a', 'b', 'c'};
 
   nfa->set_states(4);
   nfa->set_final_states(final_states);
   nfa->set_alphabet(alphabet);
 
-  nfa->add_transition(0, "a", 1);
+  nfa->add_transition(0, 'a', 1);
 
-  nfa->add_transition(1, "b", 2);
-  nfa->add_transition(1, "c", 3);
+  nfa->add_transition(1, 'b', 2);
+  nfa->add_transition(1, 'c', 3);
 
   std::cout << "With nfa:" << std::endl;
   std::cout << *nfa << std::endl << std::endl;
 
-  std::cout << "ab: " << nfa->is_word_valid("ab") << std::endl;
-  std::cout << "ac: " << nfa->is_word_valid("ac") << std::endl;
-  std::cout << "abc: " << nfa->is_word_valid("abc") << std::endl;
-  std::cout << "aa: " << nfa->is_word_valid("aa") << std::endl;
+  // std::cout << "ab: " << nfa->is_word_valid("ab") << std::endl;
+  // std::cout << "ac: " << nfa->is_word_valid("ac") << std::endl;
+  // std::cout << "abc: " << nfa->is_word_valid("abc") << std::endl;
+  // std::cout << "aa: " << nfa->is_word_valid("aa") << std::endl;
 }
 
-
+/*
 void nfa_func() {
   NFA *nfa = new NFA();
 
@@ -80,3 +80,4 @@ void nfa_func() {
 
   std::cout << nfa->is_word_valid("0110") << std::endl;
 }
+*/

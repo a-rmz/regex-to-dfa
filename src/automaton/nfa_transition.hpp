@@ -3,18 +3,22 @@
 
 class NFATransition {
   public:
-    NFATransition(int curr_state, char symbol, int next_state) {
-      this->curr_state = curr_state;
-      this->next_state = next_state;
+    int current;
+    int next;
+    char symbol;
+    
+    NFATransition(int current, char symbol, int next) {
+      this->current = current;
+      this->next = next;
       this->symbol = symbol;
     };
 
     ~NFATransition() {};
 
-  private:
-    int curr_state;
-    int next_state;
-    char symbol;
-}
+    friend std::ostream& operator<<(std::ostream& os, const NFATransition& t) {
+      os << "q" << t.current << " --" << t.symbol << "--> " << "q" << t.next << std::endl;
+    }
+
+};
 
 #endif

@@ -3,13 +3,15 @@
 #define NFA_H
 
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <iostream>
 
-#include "nfa_transition.h"
+#include "nfa_transition.hpp"
 
-#define LAMBDA "^"
+#define LAMBDA '^'
+
+typedef std::vector<NFATransition*> trans_vec;
 
 class NFA {
 
@@ -27,21 +29,18 @@ class NFA {
     // Final states
     std::vector<int> get_final_states();
     void set_final_states(std::vector<int> final_states);
+    void set_final_state(int final_state);
     bool is_final_state(int state);
 
     // Alphabet
-    std::vector<std::string> get_alphabet();
-    void set_alphabet(std::vector<std::string> alphabet);
+    std::vector<char> get_alphabet();
+    void set_alphabet(std::vector<char> alphabet);
 
     // Transitions
-    void add_transition(int state, std::string letter, int next);
-    void append_transitions(std::unordered_map<std::string, int> transition_table);
-    std::unordered_map<std::string, int> get_transitions();
+    void add_transition(int state, char letter, int next);
+    void append_transitions(trans_vec transitions);
+    trans_vec get_transitions();
     void reset_transition_table();
-
-    // Methods
-    bool is_word_valid(std::string word);
-    bool is_letter_in_alphabet(std::string letter);
 
     // Overwrites
     friend std::ostream& operator<<(std::ostream& os, const NFA& nfa);
@@ -49,9 +48,8 @@ class NFA {
   private:
     std::vector<int> states;
     std::vector<int> final_states;
-    std::vector<std::string> alphabet;
-    std::unordered_map<std::string, int> state_transition_table;
-    // std::vector<NFATransition> transitions;
+    std::vector<char> alphabet;
+    trans_vec transitions;
 };
 
 #endif // NFA_H

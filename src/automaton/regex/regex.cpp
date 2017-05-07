@@ -109,7 +109,7 @@ NFA* Regex::compile_regex() {
       default: {
         new_nfa = new NFA();
         new_nfa->set_states(2);
-        new_nfa->add_transition(0, std::string(1, symbol), 1);
+        new_nfa->add_transition(0, symbol, 1);
         fs = {1};
         new_nfa->set_final_states(fs);
         operands.push_back(new_nfa);
@@ -145,13 +145,12 @@ NFA* Regex::concat(NFA* a, NFA* b) {
 
   // Add transitions to the final states
   for(auto transition: b->get_transitions()) {
-    std::string key = transition.first;
-    int state = stoi(key.substr(0, key.length() - 1));
-    std::string symbol = key.substr(key.length() - 1, key.length());
-    int next = transition.second;
-
     // state, letter, next
-    result->add_transition(state + a->get_state_count(), symbol, next + a->get_state_count());
+    result->add_transition(
+      transition->current + a->get_state_count(),
+      transition->symbol,
+      transition->next + a->get_state_count()
+    );
   }
 
   // Set the final state
@@ -185,19 +184,12 @@ NFA* Regex::or_operator(nfa_vec opts, int no_of_selections) {
     result->add_transition(0, LAMBDA, adder_track);
     std::cout << "+++++++++++++++++++++++++" << '\n';
     for(auto transition: result->get_transitions()) {
-      std::cout << transition.first << " --> " << transition.second << '\n';
+      std::cout << *transition;
     }
     std::cout << "+++++++++++++++++++++++++" << '\n';
 
     for(auto transition: option->get_transitions()) {
-      std::string key = transition.first;
-      int state = stoi(key.substr(0, key.length() - 1));
-      std::string symbol = key.substr(key.length() - 1, key.length());
-      int next = transition.second;
-      std::cout << state + adder_track << " --> " << next + adder_track << " s: " << symbol << '\n';
-      std::cout << "adder_track: " << adder_track << '\n';
-
-      result->add_transition(state + adder_track, symbol, next + adder_track);
+      result->add_transition(transition->current + adder_track, transition->symbol, transition->next + adder_track);
     }
     adder_track += option->get_state_count();
 
@@ -205,8 +197,7 @@ NFA* Regex::or_operator(nfa_vec opts, int no_of_selections) {
   }
 
   // Move the final state
-  std::vector<int> final_state = {state_count - 1};
-  result->set_final_states(final_state);
+  result->set_final_state(state_count - 1);
 
   return result;
 }
