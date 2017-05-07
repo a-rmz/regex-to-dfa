@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 #include <iostream>
 
 #include "nfa_transition.hpp"
@@ -23,8 +24,8 @@ class NFA {
     NFA();
     virtual ~NFA();
     // States
-    std::vector<int> get_states();
-    void set_states(std::vector<int> states);
+    std::set<int> get_states();
+    void set_states(std::set<int> states);
     void set_states(int number);
     int get_state_count();
 
@@ -55,7 +56,7 @@ class NFA {
 
 
   private:
-    std::vector<int> states;
+    std::set<int> states;
     std::vector<int> final_states;
     std::vector<char> alphabet;
     trans_vec transitions;

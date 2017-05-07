@@ -10,7 +10,7 @@
   * Constructor
   */
 NFA::NFA() {
-  char alpha[] = "abcdefghijklmnopqrstuvwxyz";//ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  char alpha[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	std::vector<char> alphabet(alpha, alpha + sizeof(alpha) - 1);
   this->set_alphabet(alphabet);
 }
@@ -23,7 +23,7 @@ NFA::~NFA() {}
 /**
   * Getter: States
   */
-std::vector<int> NFA::get_states() {
+std::set<int> NFA::get_states() {
   return this->states;
 };
 
@@ -62,14 +62,16 @@ NFATransTable NFA::get_transition_table() {
 /**
   * Setter: States
   */
-void NFA::set_states(std::vector<int> states) {
+void NFA::set_states(std::set<int> states) {
   this->states = states;
 };
 
 void NFA::set_states(int number) {
-  std::vector<int> v(number);
-  std::iota(v.begin(), v.end(), 1);
-  this->states = v;
+  std::set<int> s;
+  for (int i = 0; i < number; i++) {
+    s.insert(s.end(), i);
+}
+  this->states = s;
 }
 
 /**
@@ -101,6 +103,7 @@ void NFA::set_alphabet(std::vector<char> alphabet) {
 void NFA::add_transition(int state, char symbol, int next) {
   NFATransition* t = new NFATransition(state, symbol, next);
   this->transition_table[state][symbol].push_back(next);
+  this->states.insert(state);
   this->transitions.push_back(t);
 }
 
@@ -204,9 +207,9 @@ DFA* NFA::to_dfa() {
     int state_unmarked = dfa->state_unmarked();
     dfa->set_marked(state_unmarked);
 
-    std::cout << "States for " << state_unmarked << ":\n";
-    print_vec(dfa->get_transition_table()[state_unmarked]->states);
-    std::cout << "\n/-/-/-/-/-/-/-/-/-/-/\n";
+    // std::cout << "States for " << state_unmarked << ":\n";
+    // print_vec(dfa->get_transition_table()[state_unmarked]->states);
+    // std::cout << "\n/-/-/-/-/-/-/-/-/-/-/\n";
 
     for(char symbol : dfa->get_alphabet()) {
       std::vector<int> moves = this->movements(dfa->get_transition_table()[state_unmarked]->states, symbol);

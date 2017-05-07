@@ -48,18 +48,20 @@ NFA* Regex::compile_regex() {
   std::vector<int> fs;
 
   for(char symbol : this->get_raw()) {
-    print_nfa_vec(operands);
-    print_char_vec(operators);
 
-    std::cout << symbol << '\n';
     switch (symbol) {
       case '(':
       case '.':
       case '|':
-        // std::cout << "back: " << *operands.back();
         operators.push_back(symbol);
       break;
-
+      case '*': {
+        NFA* top_operand = operands.back();
+        operands.pop_back();
+        operands.push_back(this->kleene(top_operand));
+      }
+      break;
+      
       case ')': {
         int operator_count = 0;
         char curr_operator = operators.back();
@@ -80,13 +82,9 @@ NFA* Regex::compile_regex() {
             // Iterate through the characters of the parens
             for(int i = 0; i < operator_count; i++) {
               operand2 = operands.back();
-              std::cout << "op2: " << *operand2 << '\n';
               operands.pop_back();
               operand1 = operands.back();
               operands.pop_back();
-              // std::cout<<"\n*****\t*****\t*****\n";
-              // std::cout << *res;
-              // std::cout<<"\n*****\t*****\t*****\n";
               operands.push_back(this->concat(operand1, operand2));
             }
             break;
@@ -121,18 +119,18 @@ NFA* Regex::compile_regex() {
       break;
     }
   }
-  std::cout << *operands.back() << std::endl;
+  // std::cout << *operands.back() << std::endl;
 
   return operands.back();
 };
 
 NFA* Regex::concat(NFA* a, NFA* b) {
   NFA* result = new NFA();
-  std::cout<<"\n***************\n";
+  /*std::cout<<"\n***************\n";
   std::cout << *a;
   std::cout<<"\n++++++++++++++++\n";
   std::cout << *b;
-  std::cout<<"\n***************\n";
+  std::cout<<"\n***************\n";*/
 
   int state_count = a->get_state_count() + b->get_state_count();
   result->set_states(state_count);
@@ -160,10 +158,26 @@ NFA* Regex::concat(NFA* a, NFA* b) {
   return result;
 }
 
-NFA* kleene(NFA* a) {
-  NFA* res = new NFA();
+NFA* Regex::kleene(NFA* a) {
+  NFA* result = new NFA();
 
-  return res;
+  result->set_states(2);
+  result->add_transition(0, LAMBDA, 1);
+
+  for(NFATransition* t : a->get_transitions()) {
+    result->add_transition(t->current + 1, t->symbol, t->next + 1);
+  }
+
+  // Transition to last state
+  result->add_transition(a->get_state_count(), LAMBDA, a->get_state_count() + 1);
+  // Return with Lambda to the first state of a
+  result->add_transition(a->get_state_count(), LAMBDA, 1);
+  // No value found, jump to the last
+  result->add_transition(0, LAMBDA, a->get_state_count() + 1);
+
+  result->set_final_state(a->get_state_count() + 1);
+
+  return result;
 }
 
 NFA* Regex::or_operator(nfa_vec opts, int no_of_selections) {
@@ -174,19 +188,13 @@ NFA* Regex::or_operator(nfa_vec opts, int no_of_selections) {
     state_count += option->get_state_count();
   }
 
-  std::cout << "state_count: " << state_count << '\n';
+  // std::cout << "state_count: " << state_count << '\n';
   result->set_states(state_count);
 
   int adder_track = 1;
 
   for(NFA* option : opts) {
-    std::cout << "adder_track: " << adder_track << '\n';
     result->add_transition(0, LAMBDA, adder_track);
-    std::cout << "+++++++++++++++++++++++++" << '\n';
-    for(auto transition: result->get_transitions()) {
-      std::cout << *transition;
-    }
-    std::cout << "+++++++++++++++++++++++++" << '\n';
 
     for(auto transition: option->get_transitions()) {
       result->add_transition(transition->current + adder_track, transition->symbol, transition->next + adder_track);

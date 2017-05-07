@@ -114,6 +114,9 @@ bool DFA::is_word_valid(std::string word) {
     std::string current_key = std::to_string(current_state) + current_symbol;
     // Retreive the next state from the transition table
     current_state = this->reduced_table[current_key];
+    // If, at some point, the automaton goes into the rejected state
+    // No need to check if the state is final
+    if (current_state < 0) return false;
   }
 
   // Return the value of the last state
