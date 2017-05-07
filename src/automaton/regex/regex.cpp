@@ -113,10 +113,10 @@ NFA* Regex::compile_regex() {
         fs = {1};
         new_nfa->set_final_states(fs);
         operands.push_back(new_nfa);
-        std::cout << "Push: " << '\n';
-        std::cout<<"\n***************\n";
-        std::cout << *operands.back();
-        std::cout<<"\n***************\n";
+        // std::cout << "Push: " << '\n';
+        // std::cout<<"\n***************\n";
+        // std::cout << *operands.back();
+        // std::cout<<"\n***************\n";
       }
       break;
     }
@@ -130,6 +130,7 @@ NFA* Regex::concat(NFA* a, NFA* b) {
   NFA* result = new NFA();
   std::cout<<"\n***************\n";
   std::cout << *a;
+  std::cout<<"\n++++++++++++++++\n";
   std::cout << *b;
   std::cout<<"\n***************\n";
 
@@ -144,7 +145,7 @@ NFA* Regex::concat(NFA* a, NFA* b) {
   }
 
   // Add transitions to the final states
-  for(auto transition: b->get_transitions()) {
+  for(NFATransition* transition: b->get_transitions()) {
     // state, letter, next
     result->add_transition(
       transition->current + a->get_state_count(),
@@ -154,8 +155,7 @@ NFA* Regex::concat(NFA* a, NFA* b) {
   }
 
   // Set the final state
-  std::vector<int> final_state = {a->get_state_count() + b->get_state_count() - 1};
-  result->set_final_states(final_state);
+  result->set_final_state(a->get_state_count() + b->get_state_count() - 1);
 
   return result;
 }

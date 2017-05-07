@@ -1,1 +1,2 @@
-g++ -std=c++11 -o ./build/dfa ./src/main.cpp ./src/*/*.cpp ./src/*/*.h ./src/*/*/*.cpp ./src/*/*/*.h
+g++ -std=c++11 -g -o ./build/dfa ./src/main.cpp ./src/*/*.cpp ./src/*/*.h ./src/*/*/*.cpp ./src/*/*/*.h
+echo "Success"

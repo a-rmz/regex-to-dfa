@@ -8,10 +8,12 @@
 #include <iostream>
 
 #include "nfa_transition.hpp"
+#include "dfa.h"
 
 #define LAMBDA '^'
 
 typedef std::vector<NFATransition*> trans_vec;
+typedef std::map<int, std::map<char, std::vector<int>>> NFATransTable;
 
 class NFA {
 
@@ -30,7 +32,6 @@ class NFA {
     std::vector<int> get_final_states();
     void set_final_states(std::vector<int> final_states);
     void set_final_state(int final_state);
-    bool is_final_state(int state);
 
     // Alphabet
     std::vector<char> get_alphabet();
@@ -40,16 +41,25 @@ class NFA {
     void add_transition(int state, char letter, int next);
     void append_transitions(trans_vec transitions);
     trans_vec get_transitions();
+    NFATransTable get_transition_table();
     void reset_transition_table();
 
     // Overwrites
     friend std::ostream& operator<<(std::ostream& os, const NFA& nfa);
+
+    // Conversion
+    void show_transition_table();
+    std::vector<int> eclosure(std::vector<int> state);
+    std::vector<int> movements(std::vector<int> state, char symbol);
+    DFA* to_dfa();
+
 
   private:
     std::vector<int> states;
     std::vector<int> final_states;
     std::vector<char> alphabet;
     trans_vec transitions;
+    NFATransTable transition_table;
 };
 
 #endif // NFA_H
